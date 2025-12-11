@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>SPA Public API Prototype</title>
+<style>
+  body { font-family: sans-serif; background: #111; color: #0f0; padding: 20px; }
+  button { margin: 5px; padding: 10px; background: #222; color: #0f0; border: 1px solid #0f0; cursor: pointer; }
+  pre { background: #000; padding: 10px; border: 1px solid #0f0; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+
+<h1>Public API Prototype — SPA</h1>
+
+<div id="buttons"></div>
+
+<pre id="output"></pre>
+
+<script>
+const base = "https://leonardosotelo89.github.io/public_api_prototype";
+
+const endpoints = [
+  { name: "Animals", path: "animals.json" },
+  { name: "Colors", path: "colors.json" },
+  { name: "Events", path: "events.json" },
+  { name: "Math Facts", path: "facts_math.json" },
+  { name: "Science Facts", path: "facts_science.json" },
+  { name: "Games Recommend", path: "games_recommend.json" },
+  { name: "Jokes", path: "jokes.json" },
+  { name: "Memes Top", path: "memes_top.json" },
+  { name: "Movies", path: "movies.json" },
+  { name: "Music", path: "music.json" },
+  { name: "Quotes", path: "quotes.json" },
+  { name: "Space Planets", path: "spaces_planets.json" },
+  { name: "Tech Trend", path: "tech_trend.json" },
+  { name: "Fake Weather", path: "weather_fake.json" },
+  { name: "Words", path: "words.json" }
+];
+
+const btnContainer = document.getElementById("buttons");
+const out = document.getElementById("output");
+
+// Genera los botones y asocia eventos
+endpoints.forEach(ep => {
+  const btnThen = document.createElement("button");
+  btnThen.textContent = ep.name + " (.then)";
+  btnThen.onclick = () => fetchThen(ep.path);
+  btnContainer.appendChild(btnThen);
+
+  const btnAwait = document.createElement("button");
+  btnAwait.textContent = ep.name + " (await)";
+  btnAwait.onclick = () => fetchAwait(ep.path);
+  btnContainer.appendChild(btnAwait);
+});
+
+// fetch usando .then()
+function fetchThen(path) {
+  out.textContent = "Fetching .then() → " + path + "...";
+  fetch(`${base}/${path}`)
+    .then(res => res.json())
+    .then(data => {
+      out.textContent = `Respuesta (.then) de ${path}:\n` + JSON.stringify(data, null, 2);
+    })
+    .catch(err => {
+      out.textContent = `Error (.then) de ${path}:\n` + err;
+    });
+}
+
+// fetch usando async/await
+async function fetchAwait(path) {
+  try {
+    out.textContent = "Fetching await → " + path + "...";
+    const res = await fetch(`${base}/${path}`);
+    const data = await res.json();
+    out.textContent = `Respuesta (await) de ${path}:\n` + JSON.stringify(data, null, 2);
+  } catch (err) {
+    out.textContent = `Error (await) de ${path}:\n` + err;
+  }
+}
+</script>
+
+</body>
+</html>
